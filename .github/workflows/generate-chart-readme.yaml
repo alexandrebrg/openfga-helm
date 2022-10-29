@@ -1,0 +1,35 @@
+name: 'Update README metadata'
+
+on:
+  workflow_dispatch:
+  pull_request_target:
+    branches:
+      - main
+    paths:
+      - 'openfga/values.yaml'
+permissions:
+  contents: write
+jobs:
+  update-readme-metadata:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install readme-generator-for-helm
+        run: npm install -g @bitnami/readme-generator-for-helm@2.4.2
+      - name: Checkout chart
+        uses: actions/checkout@v3
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
+      - name: Execute readme-generator-for-helm
+        run: |
+          echo "Updating README.md for OpenFGA chart"
+          readme-generator --values "openfga/values.yaml" --readme "openfga/README.md" --schema "/tmp/schema.json"
+      - name: Push changes
+        run: |
+          # Push all the changes
+          if git status -s | grep openfga; then
+            git config user.name "AlexandreBrg Bot"
+            git config user.email "alexandrebrg@users.noreply.github.com"
+            git add ./openfga && git commit -am "docs: regenerate helm values" --signoff && git push
+          fi
