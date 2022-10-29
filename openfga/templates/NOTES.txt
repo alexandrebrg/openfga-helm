@@ -1,0 +1,50 @@
+CHART NAME: {{ .Chart.Name }}
+CHART VERSION: {{ .Chart.Version }}
+APP VERSION: {{ .Chart.AppVersion }}
+
+** Please be patient while the chart is being deployed **
+
+OpenFGA can be accessed through the following DNS name from within your cluster:
+
+    {{ include "common.names.fullname" . }}.{{ include "common.names.namespace" . }}.svc.{{ .Values.clusterDomain }} (port {{ .Values.service.ports.http }})
+
+To access OpenFGA from outside the cluster execute the following commands:
+
+1. Get the OpenFGA URL by running these commands:
+
+{{- if contains "NodePort" .Values.service.type }}
+
+    export HTTP_NODE_PORT=$(kubectl get --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.spec.ports[?(@.name=='http')].nodePort}" services {{ include "common.names.fullname" . }})
+    export NODE_IP=$(kubectl get nodes --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.items[0].status.addresses[0].address}")
+
+    echo "http://${NODE_IP}:${HTTP_NODE_PORT}/"
+
+{{- else if contains "LoadBalancer" .Values.service.type }}
+
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+        You can watch its status by running 'kubectl get --namespace {{ include "common.names.namespace" . }} svc -w {{ include "common.names.fullname" . }}'
+
+    export HTTP_SERVICE_PORT=$(kubectl get --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.spec.ports[?(@.name=='http')].port}" services {{ include "common.names.fullname" . }})
+    export SERVICE_IP=$(kubectl get svc --namespace {{ include "common.names.namespace" . }} {{ include "common.names.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+    echo "http://${SERVICE_IP}:${HTTP_SERVICE_PORT}/"
+
+{{- else if contains "ClusterIP" .Values.service.type }}
+
+    export HTTP_SERVICE_PORT=$(kubectl get --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.spec.ports[?(@.name=='http')].port}" services {{ include "common.names.fullname" . }})
+    kubectl port-forward --namespace {{ include "common.names.namespace" . }} svc/{{ include "common.names.fullname" . }} ${HTTP_SERVICE_PORT}:${HTTP_SERVICE_PORT} &
+
+    echo "http://127.0.0.1:${HTTP_SERVICE_PORT}/"
+
+{{- end }}
+
+{{- if and .Values.playground.enabled .Values.service.playground.enabled }}
+
+2. Access the playground by running these commands
+
+    export PLAYGROUND_PORT=$(kubectl get --namespace {{ include "common.names.namespace" . }} -o jsonpath="{.spec.ports[?(@.name=='playground')].port}" services {{ include "common.names.fullname" . }})
+    kubectl port-forward --namespace {{ include "common.names.namespace" . }} svc/{{ include "common.names.fullname" . }} ${PLAYGROUND_PORT}:${PLAYGROUND_PORT} &
+
+    echo "http://127.0.0.1:${PLAYGROUND_PORT}/"
+
+{{- end }}

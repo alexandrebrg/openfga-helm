@@ -1,0 +1,1 @@
+# Unofficial OpenFGA helm chart
