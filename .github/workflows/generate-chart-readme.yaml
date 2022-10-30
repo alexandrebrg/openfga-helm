@@ -31,5 +31,5 @@ jobs:
           if git status -s | grep openfga; then
             git config user.name "AlexandreBrg Bot"
             git config user.email "alexandrebrg@users.noreply.github.com"
-            git add ./openfga && git commit -am "docs: regenerate helm values" --signoff && git push
+            git add ./openfga && git commit -am "docs(auto): regenerate helm values" --signoff && git push
           fi
