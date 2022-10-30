@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-env-vars" (include "common.names.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: openfga
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  OPENFGA_HTTP_ADDR: 0.0.0.0:{{- .Values.containerPorts.http }}
+  {{- if .Values.playground.enabled }}
+  OPENFGA_PLAYGROUND_ENABLED: {{ .Values.playground.enabled | quote }}
+  OPENFGA_PLAYGROUND_PORT: {{ .Values.playground.port | quote }}
+  {{- end }} 
+  {{- if ne .Values.logging.format "default" }}
+  OPENFGA_LOG_FORMAT: {{ .Values.logging.format }}
+  {{- end }}
+  {{- if eq .Values.persistencyMode "postgres" }}
+  OPENFGA_DATASTORE_URI: {{ include "openfga.databaseUri" . }}
+  {{- end }}
+  OPENFGA_DATASTORE_ENGINE: {{ .Values.persistencyMode }}

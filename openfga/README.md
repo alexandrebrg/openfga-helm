@@ -24,60 +24,58 @@
 
 ### OpenFGA parameters
 
-| Name                                            | Description                                                                                             | Value             |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ----------------- |
-| `image.registry`                                | OpenFGA image registry                                                                                  | `docker.io`       |
-| `image.repository`                              | OpenFGA image repository                                                                                | `openfga/openfga` |
-| `image.tag`                                     | OpenFGA image tag (immutable tags are recommended)                                                      | `v0.2.4`          |
-| `image.digest`                                  | OpenFGA image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag | `""`              |
-| `image.pullPolicy`                              | OpenFGA image pull policy                                                                               | `IfNotPresent`    |
-| `image.pullSecrets`                             | Specify docker-registry secret names as an array                                                        | `[]`              |
-| `command`                                       | Override default container command (useful when using custom images)                                    | `[]`              |
-| `args`                                          | Override default container args (useful when using custom images)                                       | `[]`              |
-| `containerPorts.http`                           | Port to expose at container level                                                                       | `8080`            |
-| `containerPorts.grpc`                           | Port to expose at container level                                                                       | `8081`            |
-| `playground.enabled`                            | Enable OpenFGA UI for playground                                                                        | `false`           |
-| `playground.port`                               | Port to expose at container level                                                                       | `3000`            |
-| `podAnnotations`                                | Pod annotations                                                                                         | `{}`              |
-| `podSecurityContext`                            | Enabled pod Security Context                                                                            | `{}`              |
-| `service.http.enabled`                          | Enable http port on service                                                                             | `true`            |
-| `service.grpc.enabled`                          | Enable grpc port on service                                                                             | `true`            |
-| `service.playground.enabled`                    | Enable playground port on service                                                                       | `false`           |
-| `service.ports.http`                            | HTTP service port                                                                                       | `8080`            |
-| `service.ports.grpc`                            | gRPC service port                                                                                       | `8081`            |
-| `service.ports.playground`                      | Playground service port                                                                                 | `8082`            |
-| `service.type`                                  | Kubernetes Service type                                                                                 | `ClusterIP`       |
-| `service.nodePorts.http`                        | Specify the nodePort value for the LoadBalancer and NodePort service types                              | `""`              |
-| `service.nodePorts.grpc`                        | Specify the nodePort value for the LoadBalancer and NodePort service types                              | `""`              |
-| `service.nodePorts.playground`                  | Specify the nodePort value for the LoadBalancer and NodePort service types                              | `8082`            |
-| `service.clusterIP`                             | %%MAIN_CONTAINER_NAME%% service Cluster IP                                                              | `""`              |
-| `service.loadBalancerIP`                        | loadBalancerIP if Kibana service type is `LoadBalancer`                                                 | `""`              |
-| `service.loadBalancerSourceRanges`              | %%MAIN_CONTAINER_NAME%% service Load Balancer sources                                                   | `[]`              |
-| `service.externalTrafficPolicy`                 | Enable client source IP preservation                                                                    | `Cluster`         |
-| `service.annotations`                           | Annotations for Kibana service (evaluated as a template)                                                | `{}`              |
-| `service.labels`                                | Extra labels for Kibana service                                                                         | `{}`              |
-| `service.extraPorts`                            | Extra ports to expose in the service (normally used with the `sidecar` value)                           | `[]`              |
-| `service.sessionAffinity`                       | Session Affinity for Kubernetes service, can be "None" or "ClientIP"                                    | `None`            |
-| `service.sessionAffinityConfig`                 | Additional settings for the sessionAffinity                                                             | `{}`              |
-| `autoscaling.enabled`                           | Enable autoscaling                                                                                      | `false`           |
-| `autoscaling.minReplicas`                       | Minimum number of OpenFGA replicas                                                                      | `1`               |
-| `autoscaling.maxReplicas`                       | Maximum number of OpenFGA replicas                                                                      | `10`              |
-| `autoscaling.targetCPUUtilizationPercentage`    | Target CPU utilization percentage                                                                       | `""`              |
-| `autoscaling.targetMemoryUtilizationPercentage` | Target Memory utilization percentage                                                                    | `""`              |
-| `readinessProbe.enabled`                        | Enable readinessProbe on OpenFGA containers                                                             | `true`            |
-| `readinessProbe.initialDelaySeconds`            | Initial delay seconds for readinessProbe                                                                | `30`              |
-| `readinessProbe.periodSeconds`                  | Period seconds for readinessProbe                                                                       | `10`              |
-| `readinessProbe.timeoutSeconds`                 | Timeout seconds for readinessProbe                                                                      | `1`               |
-| `readinessProbe.failureThreshold`               | Failure threshold for readinessProbe                                                                    | `3`               |
-| `readinessProbe.successThreshold`               | Success threshold for readinessProbe                                                                    | `1`               |
-| `nodeSelector`                                  | Node labels for pod assignment                                                                          | `{}`              |
-| `tolerations`                                   | Tolerations for pod assignment                                                                          | `[]`              |
-| `affinity`                                      | Affinity for pod assignment                                                                             | `{}`              |
-| `podAffinityPreset`                             | Pod affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`                     | `""`              |
-| `podAntiAffinityPreset`                         | Pod anti-affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`                | `soft`            |
-| `nodeAffinityPreset.type`                       | Node affinity preset type. Ignored if `affinity` is set. Allowed values: `soft` or `hard`               | `""`              |
-| `nodeAffinityPreset.key`                        | Node label key to match Ignored if `affinity` is set.                                                   | `""`              |
-| `nodeAffinityPreset.values`                     | Node label values to match. Ignored if `affinity` is set.                                               | `[]`              |
+| Name                                         | Description                                                                                             | Value             |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ----------------- |
+| `image.registry`                             | OpenFGA image registry                                                                                  | `docker.io`       |
+| `image.repository`                           | OpenFGA image repository                                                                                | `openfga/openfga` |
+| `image.tag`                                  | OpenFGA image tag (immutable tags are recommended)                                                      | `v0.2.4`          |
+| `image.digest`                               | OpenFGA image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag | `""`              |
+| `image.pullPolicy`                           | OpenFGA image pull policy                                                                               | `IfNotPresent`    |
+| `image.pullSecrets`                          | Specify docker-registry secret names as an array                                                        | `[]`              |
+| `command`                                    | Override default container command (useful when using custom images)                                    | `[]`              |
+| `args`                                       | Override default container args (useful when using custom images)                                       | `[]`              |
+| `containerPorts.http`                        | Port to expose at container level                                                                       | `8080`            |
+| `containerPorts.grpc`                        | Port to expose at container level                                                                       | `8081`            |
+| `playground.enabled`                         | Enable OpenFGA UI for playground                                                                        | `false`           |
+| `playground.port`                            | Port to expose at container level                                                                       | `3000`            |
+| `podAnnotations`                             | Pod annotations                                                                                         | `{}`              |
+| `podSecurityContext`                         | Enabled pod Security Context                                                                            | `{}`              |
+| `service.http.enabled`                       | Enable http port on service                                                                             | `true`            |
+| `service.grpc.enabled`                       | Enable grpc port on service                                                                             | `true`            |
+| `service.playground.enabled`                 | Enable playground port on service                                                                       | `false`           |
+| `service.ports.http`                         | HTTP service port                                                                                       | `8080`            |
+| `service.ports.grpc`                         | gRPC service port                                                                                       | `8081`            |
+| `service.ports.playground`                   | Playground service port                                                                                 | `8082`            |
+| `service.type`                               | Kubernetes Service type                                                                                 | `ClusterIP`       |
+| `service.nodePorts.http`                     | Specify the nodePort value for the LoadBalancer and NodePort service types                              | `""`              |
+| `service.nodePorts.grpc`                     | Specify the nodePort value for the LoadBalancer and NodePort service types                              | `""`              |
+| `service.nodePorts.playground`               | Specify the nodePort value for the LoadBalancer and NodePort service types                              | `8082`            |
+| `service.clusterIP`                          | %%MAIN_CONTAINER_NAME%% service Cluster IP                                                              | `""`              |
+| `service.loadBalancerIP`                     | loadBalancerIP if Kibana service type is `LoadBalancer`                                                 | `""`              |
+| `service.loadBalancerSourceRanges`           | %%MAIN_CONTAINER_NAME%% service Load Balancer sources                                                   | `[]`              |
+| `service.externalTrafficPolicy`              | Enable client source IP preservation                                                                    | `Cluster`         |
+| `service.annotations`                        | Annotations for Kibana service (evaluated as a template)                                                | `{}`              |
+| `service.labels`                             | Extra labels for Kibana service                                                                         | `{}`              |
+| `service.extraPorts`                         | Extra ports to expose in the service (normally used with the `sidecar` value)                           | `[]`              |
+| `service.sessionAffinity`                    | Session Affinity for Kubernetes service, can be "None" or "ClientIP"                                    | `None`            |
+| `service.sessionAffinityConfig`              | Additional settings for the sessionAffinity                                                             | `{}`              |
+| `readinessProbe.enabled`                     | Enable readinessProbe on OpenFGA containers                                                             | `true`            |
+| `readinessProbe.initialDelaySeconds`         | Initial delay seconds for readinessProbe                                                                | `30`              |
+| `readinessProbe.periodSeconds`               | Period seconds for readinessProbe                                                                       | `10`              |
+| `readinessProbe.timeoutSeconds`              | Timeout seconds for readinessProbe                                                                      | `1`               |
+| `readinessProbe.failureThreshold`            | Failure threshold for readinessProbe                                                                    | `3`               |
+| `readinessProbe.successThreshold`            | Success threshold for readinessProbe                                                                    | `1`               |
+| `persistencyMode`                            | Define the datastore used (default: memory), can be "postgres"                                          | `memory`          |
+| `externalDatabase.host`                      | Database host                                                                                           | `""`              |
+| `externalDatabase.port`                      | Database port number                                                                                    | `5432`            |
+| `externalDatabase.user`                      | Non-root username                                                                                       | `postgres`        |
+| `externalDatabase.password`                  | Password for the non-root user                                                                          | `""`              |
+| `externalDatabase.database`                  | Database name                                                                                           | `postgres`        |
+| `externalDatabase.existingSecret`            | Name of an existing secret resource containing the database credentials                                 | `""`              |
+| `externalDatabase.existingSecretPasswordKey` | Name of an existing secret key containing the database credentials                                      | `""`              |
+| `extraEnvVars`                               | Extra environment variables to be set on OpenFGA container                                              | `[]`              |
+| `extraEnvVarsCM`                             | Name of existing ConfigMap containing extra env vars                                                    | `""`              |
+| `extraEnvVarsSecret`                         | Name of existing Secret containing extra env vars                                                       | `""`              |
 
 
 ### OpenFGA Logging parameters
@@ -85,4 +83,27 @@
 | Name             | Description                                                     | Value     |
 | ---------------- | --------------------------------------------------------------- | --------- |
 | `logging.format` | Alternates between the default log output format or json format | `default` |
+
+
+### Security parameters
+
+| Name                                            | Description                                                                               | Value   |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------- | ------- |
+| `serviceAccount.create`                         | Enable the creation of a ServiceAccount for OpenFGA pods                                  | `true`  |
+| `serviceAccount.name`                           | Name of the created ServiceAccount                                                        | `""`    |
+| `serviceAccount.automountServiceAccountToken`   | Auto-mount the service account token in the pod                                           | `true`  |
+| `serviceAccount.annotations`                    | Additional custom annotations for the ServiceAccount                                      | `{}`    |
+| `autoscaling.enabled`                           | Enable autoscaling                                                                        | `false` |
+| `autoscaling.minReplicas`                       | Minimum number of OpenFGA replicas                                                        | `1`     |
+| `autoscaling.maxReplicas`                       | Maximum number of OpenFGA replicas                                                        | `10`    |
+| `autoscaling.targetCPUUtilizationPercentage`    | Target CPU utilization percentage                                                         | `""`    |
+| `autoscaling.targetMemoryUtilizationPercentage` | Target Memory utilization percentage                                                      | `""`    |
+| `nodeSelector`                                  | Node labels for pod assignment                                                            | `{}`    |
+| `tolerations`                                   | Tolerations for pod assignment                                                            | `[]`    |
+| `affinity`                                      | Affinity for pod assignment                                                               | `{}`    |
+| `podAffinityPreset`                             | Pod affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`       | `""`    |
+| `podAntiAffinityPreset`                         | Pod anti-affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`  | `soft`  |
+| `nodeAffinityPreset.type`                       | Node affinity preset type. Ignored if `affinity` is set. Allowed values: `soft` or `hard` | `""`    |
+| `nodeAffinityPreset.key`                        | Node label key to match Ignored if `affinity` is set.                                     | `""`    |
+| `nodeAffinityPreset.values`                     | Node label values to match. Ignored if `affinity` is set.                                 | `[]`    |
 
