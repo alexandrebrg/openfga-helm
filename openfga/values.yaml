@@ -182,20 +182,6 @@ service:
   ##     timeoutSeconds: 300
   ##
   sessionAffinityConfig: {}
-
-## OpenFGA Autoscaling configuration
-## @param autoscaling.enabled Enable autoscaling
-## @param autoscaling.minReplicas Minimum number of OpenFGA replicas
-## @param autoscaling.maxReplicas Maximum number of OpenFGA replicas
-## @param autoscaling.targetCPUUtilizationPercentage Target CPU utilization percentage
-## @param autoscaling.targetMemoryUtilizationPercentage Target Memory utilization percentage
-##
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: ""
-  targetMemoryUtilizationPercentage: ""
   
 ## @param readinessProbe.enabled Enable readinessProbe on OpenFGA containers
 ## @param readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
@@ -211,6 +197,80 @@ readinessProbe:
   timeoutSeconds: 1
   failureThreshold: 3
   successThreshold: 1
+
+## @param persistencyMode Define the datastore used (default: memory), can be "postgres"
+##
+persistencyMode: memory
+
+## External PostgreSQL configuration
+## @param externalDatabase.host Database host
+## @param externalDatabase.port Database port number
+## @param externalDatabase.user Non-root username
+## @param externalDatabase.password Password for the non-root user
+## @param externalDatabase.database Database name
+##
+externalDatabase:
+  host: ""
+  port: 5432
+  user: postgres
+  database: postgres
+  password: ""
+  existingSecret: ""
+  existingSecretPasswordKey: ""
+
+## @param extraEnvVars Extra environment variables to be set on OpenFGA container
+## Example:
+## extraEnvVars:
+##   - name: FOO
+##     value: "bar"
+##
+extraEnvVars: []
+## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
+##
+extraEnvVarsCM: ""
+## @param extraEnvVarsSecret Name of existing Secret containing extra env vars
+##
+extraEnvVarsSecret: ""
+
+## @section OpenFGA Logging parameters
+
+## OpenFGA logging configuration
+## @param logging.format Alternates between the default log output format or json format
+##
+logging:
+  format: default
+
+## @section Security parameters
+## Specifies whether a ServiceAccount should be created
+##
+serviceAccount:
+  ## @param serviceAccount.create Enable the creation of a ServiceAccount for OpenFGA pods
+  ##
+  create: true
+  ## @param serviceAccount.name Name of the created ServiceAccount
+  ## If not set and create is true, a name is generated using the fullname template
+  ##
+  name: ""
+  ## @param serviceAccount.automountServiceAccountToken Auto-mount the service account token in the pod
+  ##
+  automountServiceAccountToken: true
+  ## @param serviceAccount.annotations Additional custom annotations for the ServiceAccount
+  ##
+  annotations: {}
+
+## OpenFGA Autoscaling configuration
+## @param autoscaling.enabled Enable autoscaling
+## @param autoscaling.minReplicas Minimum number of OpenFGA replicas
+## @param autoscaling.maxReplicas Maximum number of OpenFGA replicas
+## @param autoscaling.targetCPUUtilizationPercentage Target CPU utilization percentage
+## @param autoscaling.targetMemoryUtilizationPercentage Target Memory utilization percentage
+##
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: ""
+  targetMemoryUtilizationPercentage: ""
 
 ## @param nodeSelector Node labels for pod assignment
 ## ref: https://kubernetes.io/docs/user-guide/node-selection/
@@ -254,11 +314,3 @@ nodeAffinityPreset:
   ##   - e2e-az2
   ##
   values: []
-
-## @section OpenFGA Logging parameters
-
-## OpenFGA logging configuration
-## @param logging.format Alternates between the default log output format or json format
-##
-logging:
-  format: default
