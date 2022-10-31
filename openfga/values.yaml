@@ -208,8 +208,8 @@ persistencyMode: memory
 ## @param externalDatabase.user Non-root username
 ## @param externalDatabase.password Password for the non-root user
 ## @param externalDatabase.database Database name
-## @param externalDatabase.existingSecret Name of an existing secret resource containing the database credentials
-## @param externalDatabase.existingSecretPasswordKey Name of an existing secret key containing the database credentials
+## @param externalDatabase.existingSecret Name of an existing secret resource containing the database uri
+## @param externalDatabase.existingSecretKey Name of an existing secret key containing the database uri
 ##
 externalDatabase:
   host: ""
@@ -218,7 +218,7 @@ externalDatabase:
   database: postgres
   password: ""
   existingSecret: ""
-  existingSecretPasswordKey: ""
+  existingSecretKey: ""
 
 ## @param extraEnvVars Extra environment variables to be set on OpenFGA container
 ## Example:

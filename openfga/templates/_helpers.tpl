@@ -15,17 +15,17 @@ Returns proper docker image registry secret name
 {{- end -}}
 
 {{/*
-Returns the name of the secret for database password 
+Returns the name of the secret for database uri
 */}}
 {{- define "openfga.databaseSecretName" -}}
 {{- default (printf "%s-postgres" (include "common.names.fullname" .)) (tpl .Values.externalDatabase.existingSecret $) -}}
 {{- end -}}
 
 {{/*
-Returns the key in the secret for database password 
+Returns the key in the secret for database uri
 */}}
 {{- define "openfga.databaseSecretKey" -}}
-{{- default "password" (tpl .Values.externalDatabase.existingSecretPasswordKey $) -}}
+{{- default "uri" (tpl .Values.externalDatabase.existingSecretKey $) -}}
 {{- end -}}
 
 {{/*
@@ -34,6 +34,7 @@ Returns the datastore URI
 {{- define "openfga.databaseUri" -}}
 {{- printf "postgres://%s:%s@%s:%v/%s" .Values.externalDatabase.user .Values.externalDatabase.password .Values.externalDatabase.host .Values.externalDatabase.port .Values.externalDatabase.database }}
 {{- end -}}
+
 
 {{/*
 Create the name of the service account to use

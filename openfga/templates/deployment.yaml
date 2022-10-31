@@ -81,13 +81,13 @@ spec:
             - run
           {{- end }}
           env:
-            # We cannot yet configure database through environment variables, waiting for the 
-            # feature before activating this, for now we can only provide full URI
-            # - name: OPENFGA_DB_PASSWORD
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: {{ include "openfga.databaseSecretName" . }}
-            #       key: {{ include "openfga.databaseSecretKey" . }}
+            {{- if eq .Values.persistencyMode "postgres" }}
+            - name: OPENFGA_DATASTORE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "openfga.databaseSecretName" . }}
+                  key: {{ include "openfga.databaseSecretKey" . }}
+            {{- end }}
             {{- if .Values.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}

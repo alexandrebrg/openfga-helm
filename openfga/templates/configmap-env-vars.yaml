@@ -20,7 +20,4 @@ data:
   {{- if ne .Values.logging.format "default" }}
   OPENFGA_LOG_FORMAT: {{ .Values.logging.format }}
   {{- end }}
-  {{- if eq .Values.persistencyMode "postgres" }}
-  OPENFGA_DATASTORE_URI: {{ include "openfga.databaseUri" . }}
-  {{- end }}
   OPENFGA_DATASTORE_ENGINE: {{ .Values.persistencyMode }}
