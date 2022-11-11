@@ -1,0 +1,78 @@
+{{- if (eq .Values.persistencyMode "postgres") }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "common.names.fullname" . }}-migrate
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: openfga
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "common.tplvalues.render" ( dict "value" .Values.migrateJob.annotations "context" $ ) | nindent 4 }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+spec:
+  ttlSecondsAfterFinished: {{ .Values.migrateJob.ttlSecondsAfterFinished }}
+  backoffLimit: {{ .Values.migrateJob.backoffLimit }}
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: openfga
+      annotations:
+        checksum/configuration: {{ include (print $.Template.BasePath "/configmap-env-vars.yaml") . | sha256sum }}
+        {{- if .Values.migrateJob.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.migrateJob.podAnnotations "context" $) | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ template "openfga.serviceAccountName" . }}
+      {{- include "openfga.imagePullSecrets" . | nindent 6 }}
+      restartPolicy: Never
+      {{- if .Values.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
+      {{- if .Values.migrateJob.podTolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.migrateJob.podTolerations "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.migrateJob.initContainers }}
+      initContainers:
+        {{- include "common.tplvalues.render" (dict "value" .Values.migrateJob.initContainers "context" $) | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: openfga-migrate
+          image: {{ template "openfga.migrateJob.image" . }}
+          imagePullPolicy: {{ .Values.migrateJob.image.pullPolicy }}
+          {{- if .Values.migrateJob.command }}
+          command: {{- include "common.tplvalues.render" (dict "value" .Values.migrateJob.command "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.migrateJob.args }}
+          args: {{- include "common.tplvalues.render" (dict "value" .Values.migrateJob.args "context" $) | nindent 12 }}
+          {{- else }}
+          args: 
+            - migrate
+          {{- end }}
+          env:
+            {{- if eq .Values.persistencyMode "postgres" }}
+            - name: OPENFGA_DATASTORE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "openfga.databaseSecretName" . }}
+                  key: {{ include "openfga.databaseSecretKey" . }}
+            {{- end }}
+            {{- if .Values.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ printf "%s-env-vars" (include "common.names.fullname" .) }}
+            {{- if .Values.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+{{- end }}

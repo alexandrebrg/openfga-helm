@@ -71,14 +71,6 @@ image:
   ##
   pullSecrets: []
 
-## @param command Override default container command (useful when using custom images)
-##
-command: []
-
-## @param args Override default container args (useful when using custom images)
-##
-args: []
-
 ## @param containerPorts.http Port to expose at container level
 ## @param containerPorts.grpc Port to expose at container level
 ##
@@ -92,18 +84,6 @@ containerPorts:
 playground:
   enabled: false
   port: 3000
-
-## @param podAnnotations Pod annotations
-## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-##
-podAnnotations: {}
-
-## Configure Pods Security Context
-## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
-## @param podSecurityContext Enabled pod Security Context
-##
-podSecurityContext: {}
-  # fsGroup: 2000
 
 ## Service configuration
 ##
@@ -183,20 +163,7 @@ service:
   ##
   sessionAffinityConfig: {}
   
-## @param readinessProbe.enabled Enable readinessProbe on OpenFGA containers
-## @param readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
-## @param readinessProbe.periodSeconds Period seconds for readinessProbe
-## @param readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
-## @param readinessProbe.failureThreshold Failure threshold for readinessProbe
-## @param readinessProbe.successThreshold Success threshold for readinessProbe
-##
-readinessProbe:
-  enabled: true
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 1
-  failureThreshold: 3
-  successThreshold: 1
+## @section Storage parameters
 
 ## @param persistencyMode Define the datastore used (default: memory), can be "postgres"
 ##
@@ -219,6 +186,87 @@ externalDatabase:
   password: ""
   existingSecret: ""
   existingSecretKey: ""
+
+# Migration job configuration when using postgresql
+migrateJob:
+  ## OpenFGA image version
+  ## ref: https://hub.docker.com/r/openfga/openfga/tags/
+  ## @param migrateJob.image.registry OpenFGA image registry
+  ## @param migrateJob.image.repository OpenFGA image repository
+  ## @param migrateJob.image.tag OpenFGA image tag (immutable tags are recommended)
+  ## @param migrateJob.image.digest OpenFGA image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  ## @param migrateJob.image.pullPolicy OpenFGA image pull policy
+  ##
+  image:
+    registry: docker.io
+    repository: openfga/openfga
+    tag: v0.2.4
+    digest: ""
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+    ##
+    pullPolicy: IfNotPresent
+  ## @param migrateJob.annotations Annotations for migration job
+  annotations: {}
+  ## @param migrateJob.podAnnotations Annotations for pod created by migration job
+  podAnnotations: {}
+  ## @param migrateJob.podToleration Tolerations for job pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  podTolerations: []
+  ## @param migrationJob.initContainers Add additional init containers to migration job
+  initContainers: []
+  ## @param migrationJob.command Change the command executed at run of migration job container
+  command: []
+  ## @param migrationJob.args Change arguments executed at run of migration job container
+  args: []
+  ## @param migrationJob.backoffLimit Number of backoff before migration job is considered as failed
+  backoffLimit: 1
+  ## @param migrationJob.ttlSecondsAfterFinished Time in seconds for time to live of the job
+  ttlSecondsAfterFinished: 60
+  ## Migration pod resources limits
+  ## @param migrationJob.resources.limits Resources limits for migration pod
+  ## @param migrationJob.resources.requests Resources requested for migration pod
+  resources:
+    limits: {}
+    requests: {}
+
+## @section Deployment parameters
+
+## @param command Override default container command (useful when using custom images)
+##
+command: []
+
+## @param args Override default container args (useful when using custom images)
+##
+args: []
+
+## @param podAnnotations Pod annotations
+## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+##
+podAnnotations: {}
+
+## Configure Pods Security Context
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+## @param podSecurityContext Enabled pod Security Context
+##
+podSecurityContext: {}
+  # fsGroup: 2000
+
+## @param readinessProbe.enabled Enable readinessProbe on OpenFGA containers
+## @param readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+## @param readinessProbe.periodSeconds Period seconds for readinessProbe
+## @param readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+## @param readinessProbe.failureThreshold Failure threshold for readinessProbe
+## @param readinessProbe.successThreshold Success threshold for readinessProbe
+##
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 1
+  failureThreshold: 3
+  successThreshold: 1
 
 ## @param extraEnvVars Extra environment variables to be set on OpenFGA container
 ## Example:

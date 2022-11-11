@@ -8,6 +8,13 @@ Returns formatted remote path to openfga container image
 {{- end -}}
 
 {{/*
+Returns formated remote path to openfga migration image
+*/}}
+{{- define "openfga.migrateJob.image" -}}
+{{ include "common.images.image" (dict "imageRoot" .Values.migrateJob.image "global" .Values.global) }}
+{{- end -}}
+
+{{/*
 Returns proper docker image registry secret name
 */}}
 {{- define "openfga.imagePullSecrets" -}}
