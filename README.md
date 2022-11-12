@@ -7,12 +7,14 @@
 OpenFGA is an high-performance and flexible authorization/permission engine built for developers and inspired by [Google Zanzibar](https://research.google/pubs/pub48190/). 
 You can learn more about it on their [official repository](https://github.com/openfga/openfga/).
 
-## TL;DR;
+## TL;DR
 
 ```
 helm repo add openfga https://alexandrebrg.github.io/openfga-helm
 helm install openfga openfga/openfga
 ```
+
+*Default settings will create a PostgreSQL server along with OpenFGA.*
 
 ## Quick start
 

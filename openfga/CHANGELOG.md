@@ -3,6 +3,7 @@
 ## 0.3.0
 
 * Add a migration job when running with postgresql
+* Add postgresql dependency to be running embedded
 
 ## 0.2.2
 
