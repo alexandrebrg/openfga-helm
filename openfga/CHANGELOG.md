@@ -4,6 +4,7 @@
 
 * Add a migration job when running with postgresql
 * Add postgresql dependency to be running embedded
+* Upgrade OpenFGA version to v0.2.5
 
 ## 0.2.2
 
