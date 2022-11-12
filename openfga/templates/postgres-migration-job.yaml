@@ -36,10 +36,13 @@ spec:
       {{- if .Values.migrateJob.podTolerations }}
       tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.migrateJob.podTolerations "context" .) | nindent 8 }}
       {{- end }}
-      {{- if .Values.migrateJob.initContainers }}
       initContainers:
-        {{- include "common.tplvalues.render" (dict "value" .Values.migrateJob.initContainers "context" $) | nindent 8 }}
-      {{- end }}
+        - name: wait-for-postgres
+          image: busybox:1.35 
+          command: ['sh', '-c', 'until (timeout 1 nc -vz {{ (include "openfga.databaseHost" .) | quote }} 5432); do echo "Waiting for postgres..."; sleep 3; done;']
+        {{- if .Values.migrateJob.initContainers }}
+        {{ include "common.tplvalues.render" (dict "value" .Values.migrateJob.initContainers "context" $) | nindent 8 }}
+        {{- end }}
       containers:
         - name: openfga-migrate
           image: {{ template "openfga.migrateJob.image" . }}
