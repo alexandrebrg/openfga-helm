@@ -224,25 +224,34 @@ migrateJob:
     ##
     pullPolicy: IfNotPresent
   ## @param migrateJob.annotations Annotations for migration job
+  ##
   annotations: {}
   ## @param migrateJob.podAnnotations Annotations for pod created by migration job
+  ##
   podAnnotations: {}
-  ## @param migrateJob.podToleration Tolerations for job pod assignment
+  ## @param migrateJob.podTolerations Tolerations for job pod assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
   podTolerations: []
-  ## @param migrationJob.initContainers Add additional init containers to migration job
+  ## @param migrateJob.initContainers Add additional init containers to migration job
+  ##
   initContainers: []
-  ## @param migrationJob.command Change the command executed at run of migration job container
+  ## @param migrateJob.command Change the command executed at run of migration job container
+  ##
   command: []
-  ## @param migrationJob.args Change arguments executed at run of migration job container
+  ## @param migrateJob.args Change arguments executed at run of migration job container
+  ##
   args: []
-  ## @param migrationJob.backoffLimit Number of backoff before migration job is considered as failed
+  ## @param migrateJob.backoffLimit Number of backoff before migration job is considered as failed
+  ##
   backoffLimit: 1
-  ## @param migrationJob.ttlSecondsAfterFinished Time in seconds for time to live of the job
+  ## @param migrateJob.ttlSecondsAfterFinished Time in seconds for time to live of the job
+  ##
   ttlSecondsAfterFinished: 60
   ## Migration pod resources limits
-  ## @param migrationJob.resources.limits Resources limits for migration pod
-  ## @param migrationJob.resources.requests Resources requested for migration pod
+  ## @param migrateJob.resources.limits Resources limits for migration pod
+  ## @param migrateJob.resources.requests Resources requested for migration pod
+  ##
   resources:
     limits: {}
     requests: {}
