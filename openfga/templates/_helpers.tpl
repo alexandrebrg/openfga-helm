@@ -25,7 +25,7 @@ Returns proper docker image registry secret name
 Returns the name of the secret for database uri
 */}}
 {{- define "openfga.databaseSecretName" -}}
-{{- default (printf "%s-postgres" (include "common.names.fullname" .)) (tpl .Values.externalDatabase.existingSecret $) -}}
+    {{- default (printf "%s-postgres" (include "common.names.fullname" .)) (tpl .Values.externalDatabase.existingSecret $) -}}
 {{- end -}}
 
 {{/*
@@ -36,12 +36,103 @@ Returns the key in the secret for database uri
 {{- end -}}
 
 {{/*
+Create a default fully qualified app name.
+*/}}
+{{- define "openfga.postgresql.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "postgresql" "chartValues" .Values.postgresql "context" $) -}}
+{{- end -}}
+
+{{/*
+Returns the database username
+*/}}
+{{- define "openfga.databaseUser" -}}
+{{- if .Values.postgresql.enabled -}}
+    {{- if .Values.global.postgresql -}}
+        {{- if .Values.global.postgresql.auth -}}
+            {{- coalesce .Values.global.postgresql.auth.username .Values.postgresql.auth.username -}}
+        {{- else -}}
+            {{- .Values.postgresql.auth.username -}}
+        {{- end -}}
+    {{- else -}}
+        {{- .Values.postgresql.auth.username -}}
+    {{- end -}}
+{{- else -}}
+    {{- .Values.externalDatabase.user -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the Database port
+*/}}
+{{- define "openfga.databasePort" -}}
+{{- ternary 5432 .Values.externalDatabase.port .Values.postgresql.enabled -}}
+{{- end -}}
+
+{{/*
+Return the Database database name
+*/}}
+{{- define "openfga.databaseName" -}}
+{{- if .Values.postgresql.enabled -}}
+    {{- if .Values.global.postgresql -}}
+        {{- if .Values.global.postgresql.auth -}}
+            {{- coalesce .Values.global.postgresql.auth.database .Values.postgresql.auth.database -}}
+        {{- else -}}
+            {{- .Values.postgresql.auth.database -}}
+        {{- end -}}
+    {{- else -}}
+        {{- .Values.postgresql.auth.database -}}
+    {{- end -}}
+{{- else -}}
+    {{- .Values.externalDatabase.database -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the Database hostname
+*/}}
+{{- define "openfga.databaseHost" -}}
+    {{- if eq .Values.postgresql.architecture "replication" -}}
+        {{- ternary (include "openfga.postgresql.fullname" .) .Values.externalDatabase.host .Values.postgresql.enabled -}}-primary
+    {{- else -}}
+        {{- ternary (include "openfga.postgresql.fullname" .) .Values.externalDatabase.host .Values.postgresql.enabled -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Return the database password
+*/}}
+{{- define "openfga.databasePassword" -}}
+    {{- if .Values.postgresql.enabled -}}
+        {{- if .Values.global.postgresql -}}
+            {{- if .Values.global.postgresql.auth -}}
+                {{- coalesce .Values.global.postgresql.auth.password .Values.postgresql.auth.password -}}
+            {{- else -}}
+                {{- .Values.postgresql.auth.password -}}
+            {{- end -}}
+        {{- else -}}
+            {{- .Values.postgresql.auth.password -}}
+        {{- end -}}
+    {{- else -}}
+        {{- .Values.externalDtabase.password -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
 Returns the datastore URI
 */}}
 {{- define "openfga.databaseUri" -}}
-{{- printf "postgres://%s:%s@%s:%v/%s" .Values.externalDatabase.user .Values.externalDatabase.password .Values.externalDatabase.host .Values.externalDatabase.port .Values.externalDatabase.database }}
+{{- if .Values.postgresql.enabled -}}
+    {{- printf "postgres://%s:%s@%s:%v/%s" 
+        (include "openfga.databaseUser" .)
+        (include "openfga.databasePassword" .)
+        (include "openfga.databaseHost" .)
+        (include "openfga.databasePort" .)
+        (include "openfga.databaseName" .)
+    -}}
+{{- else -}}
+    {{- printf "postgres://%s:%s@%s:%v/%s" .Values.externalDatabase.user .Values.externalDatabase.password .Values.externalDatabase.host .Values.externalDatabase.port .Values.externalDatabase.database }}
 {{- end -}}
-
+{{- end -}}
 
 {{/*
 Create the name of the service account to use
