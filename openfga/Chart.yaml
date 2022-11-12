@@ -3,6 +3,10 @@ name: openfga
 version: 0.2.2
 appVersion: "v0.2.4"
 dependencies:
+  - condition: postgresql.enabled
+    name: postgresql
+    repository: https://charts.bitnami.com/bitnami
+    version: 12.x.x
   - name: common
     repository: https://charts.bitnami.com/bitnami
     tags:
