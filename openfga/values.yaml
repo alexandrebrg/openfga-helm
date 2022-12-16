@@ -55,7 +55,7 @@ clusterDomain: cluster.local
 image:
   registry: docker.io
   repository: openfga/openfga
-  tag: v0.2.5
+  tag: v0.3.0
   digest: ""
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -216,7 +216,7 @@ migrateJob:
   image:
     registry: docker.io
     repository: openfga/openfga
-    tag: v0.2.5
+    tag: v0.3.0
     digest: ""
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
