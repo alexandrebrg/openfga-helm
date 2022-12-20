@@ -6,7 +6,7 @@ APP VERSION: {{ .Chart.AppVersion }}
 
 OpenFGA can be accessed through the following DNS name from within your cluster:
 
-    {{ include "common.names.fullname" . }}.{{ include "common.names.namespace" . }}.svc.{{ .Values.clusterDomain }} (port {{ .Values.service.ports.http }})
+    {{ include "common.names.fullname" . }}.{{ include "common.names.namespace" . }}.svc.{{ .Values.clusterDomain }}:{{ .Values.service.ports.http }}
 
 To access OpenFGA from outside the cluster execute the following commands:
 

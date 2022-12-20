@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.2
+
+* Upgrade OpenFGA version to v0.3.1
+* Make installation message output less confusing
+
 ## 0.3.0
 
 * Add a migration job when running with postgresql
