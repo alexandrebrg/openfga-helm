@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v3
         with:
           go-version: "1.19"
       - name: Setup dependencies
@@ -40,13 +40,25 @@ jobs:
       - name: Checkout dependencies
         uses: ./.github/actions/setup
 
-      - name: Debug
-        run: |
-          ls -la
-          ls -la openfga
-          ls -la openfga/charts
-
       - name: Lint helm chart
         run: helm lint ./openfga/
       - name: Validate helm chart
         run: helm kubeval "./openfga/" --exit-on-error --strict --schema-location "${SCHEMAS_URL}" --force-color
+
+  install:
+    name: Install chart
+    needs:
+      - dependencies
+      - check
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Checkout dependencies
+        uses: ./.github/actions/setup
+
+      - name: Install chart
+        run: |
+          make k3d-up
+          ./scripts/install.sh
+          make k3d-down
