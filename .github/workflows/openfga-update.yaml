@@ -1,7 +1,8 @@
 name: Check for updates
 
 on:
-  push:
+  schedule:
+    - cron:  '0 10 * * 1'
 
 jobs:
   dependencies:
@@ -51,4 +52,4 @@ jobs:
             --body-file ./NEW_RELEASE.md \
             --assignee AlexandreBrg \
             --label "help wanted,enhancement"
-#        if: ${{ env.LATEST_OPENFGA_VERSION != env.CURRENT_OPENFGA_VERSION }}
+        if: ${{ env.LATEST_OPENFGA_VERSION != env.CURRENT_OPENFGA_VERSION }}
