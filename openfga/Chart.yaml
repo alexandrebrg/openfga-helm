@@ -13,10 +13,9 @@ dependencies:
       - bitnami-common
     version: 2.x.x
 description: OpenFGA is a high performance and flexible authorization/permission engine built for developers and inspired by Google Zanzibar
-engine: gotpl
 home: https://github.com/AlexandreBrg/openfga-helm
 keywords:
   - authorization
-maitainers:
+maintainers:
   - name: AlexandreBrg
     url: https://github.com/AlexandreBrg/openfga-helm

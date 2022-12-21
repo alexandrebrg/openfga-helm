@@ -20,9 +20,9 @@ runs:
           ${{ github.workspace }}/openfga/charts
           ${{ github.workspace }}/.github/.bin
         key:
-          ${{ runner.os }}-${{hashFiles('**/Chart.lock') }}
+          ${{ runner.os }}--${{hashFiles('**/Chart.lock') }}
         restore-keys: |
-          ${{ runner.os }}-${{hashFiles('**/Chart.lock') }}
+          ${{ runner.os }}--${{hashFiles('**/Chart.lock') }}
 
     - name: Setup dependencies
       if: steps.cache-packages.outputs.cache-hit != 'true'
@@ -33,11 +33,20 @@ runs:
         K3D_INSTALL_DIR: ${{ github.workspace }}/.github/.bin
         KUBECTL_VERSION: "1.26.0"
         K3D_VERSION: "5.4.6"
+        YQ_VERSION: "v4.30.6"
+        JQ_VERSION: "1.6"
       run: |
         export PATH="${{ github.workspace }}/.github/.bin:$PATH"
         echo "PATH=${{ github.workspace }}/.github/.bin:$PATH" >> $GITHUB_ENV
         
-        echo "Downloading 'helm' 3...."
+        echo "Installing jq"
+        wget https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64 -O /usr/bin/yq && chmod +x /usr/bin/yq
+
+        
+        echo "Installing yq"
+        wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
+        
+        echo "Installing 'helm' 3...."
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         
         echo "Installing kubeval helm plugin"
