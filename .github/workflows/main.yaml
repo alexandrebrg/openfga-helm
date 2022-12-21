@@ -40,6 +40,12 @@ jobs:
       - name: Checkout dependencies
         uses: ./.github/actions/setup
 
+      - name: Debug
+        run: |
+          ls -la
+          ls -la openfga
+          ls -la openfga/charts
+
       - name: Lint helm chart
         run: helm lint ./openfga/
       - name: Validate helm chart

@@ -20,9 +20,9 @@ runs:
           ${{ github.workspace }}/openfga/charts
           ${{ github.workspace }}/.github/.bin
         key:
-          ${{ runner.os }}_${{ env.BRANCH_NAME }}
+          ${{ runner.os }}_${{hashFiles('**/Chart.lock') }}
         restore-keys: |
-          ${{ runner.os }}_${{ env.BRANCH_NAME }}
+          ${{ runner.os }}_${{hashFiles('**/Chart.lock') }}
 
     - name: Setup dependencies
       if: steps.cache-packages.outputs.cache-hit != 'true'
