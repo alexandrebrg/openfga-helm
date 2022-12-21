@@ -17,12 +17,13 @@ runs:
           ~/.config/helm
           ~/.local/share/helm
           ~/.cache/helm
+          ~/openfga/charts
           ${{ github.workspace }}/.bin
         key:
-          ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-${{
-          hashFiles('**/go.sum') }}
+          ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-
         restore-keys: |
           ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-
+
     - name: Setup dependencies
       if: steps.cache-packages.outputs.cache-hit != 'true'
       shell: bash
@@ -50,4 +51,10 @@ runs:
         pushd .github/.bin
         curl -LO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl
         chmod +x ./kubectl
+        popd
+        
+        echo "Installing chart dependencies"
+        pushd openfga
+        helm repo add bitnami https://charts.bitnami.com/bitnami
+        helm repo update
         popd
