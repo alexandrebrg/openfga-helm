@@ -28,10 +28,18 @@ jobs:
         with:
           repository: openfga/openfga
           excludes: prerelease, draft
-      - name: "Print result"
+      - name: "Concatenate versions"
         run: |
-          echo "tag_name: ${{ steps.openfga.outputs.release }}"
-      - name: "Fetch current OpenFGA version"
-        run: |
-          echo "CURRENT_OPENFGA_VERSION=$(yq eval '.appVersion' openfga/Chart.yaml)" >> $GITHUB_ENV
-          echo $(yq eval '.appVersion' openfga/Chart.yaml)
+          echo "latest version: ${{ steps.openfga.outputs.release }}"
+          echo "LATEST_OPENFGA_VERSION=${{ steps.openfga.outputs.release }}" >> $GITHUB_ENV
+          
+          export CURRENT_VERSION=$(yq eval '.appVersion' openfga/Chart.yaml)
+          echo "CURRENT_OPENFGA_VERSION=${CURRENT_VERSION}" >> $GITHUB_ENV
+      
+      - uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          filename: .github/NEW_RELEASE_TEMPLATE.md
+          update_existing: true
+          search_existing: open
