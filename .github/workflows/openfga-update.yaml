@@ -50,5 +50,5 @@ jobs:
             --title "Update OpenFGA to ${{ env.LATEST_OPENFGA_VERSION }}" \
             --body-file ./NEW_RELEASE.md \
             --assignee AlexandreBrg \
-            --label "help wanted, enhancement"
+            --label "help wanted,enhancement"
 #        if: ${{ env.LATEST_OPENFGA_VERSION != env.CURRENT_OPENFGA_VERSION }}
