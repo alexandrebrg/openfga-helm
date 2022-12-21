@@ -28,10 +28,16 @@ jobs:
         with:
           repository: openfga/openfga
           excludes: prerelease, draft
-      - name: "Concatenate versions"
+      - name: "Fetch versions"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "latest version: ${{ steps.openfga.outputs.release }}"
-          echo "LATEST_OPENFGA_VERSION=${{ steps.openfga.outputs.release }}" >> $GITHUB_ENV
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            /repos/openfga/openfga/releases/latest > latest.json
+          export LATEST_OPENFGA_VERSION=$(cat latest.json | jq -r '.tag_name')
+          echo "latest version: ${LATEST_OPENFGA_VERSION}"
+          echo "LATEST_OPENFGA_VERSION=${LATEST_OPENFGA_VERSION}" >> $GITHUB_ENV
           
           export CURRENT_VERSION=$(yq eval '.appVersion' openfga/Chart.yaml)
           echo "CURRENT_OPENFGA_VERSION=${CURRENT_VERSION}" >> $GITHUB_ENV
