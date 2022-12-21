@@ -1,0 +1,61 @@
+name: "Setup"
+description: "Install all necessary dependencies and cache them"
+runs:
+  using: "composite"
+  steps:
+    - name: Extract branch name
+      shell: bash
+      run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_STATE
+      id: extract_branch
+
+    - uses: actions/cache@v3
+      id: cache-packages
+      with:
+        path: |
+          ~/go/pkg/mod
+          ~/go/bin
+          ~/.config/helm
+          ~/.local/share/helm
+          ~/.cache/helm
+          ${{ github.workspace }}/openfga/charts
+          ${{ github.workspace }}/.github/.bin
+        key:
+          ${{ runner.os }}-${{hashFiles('**/Chart.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-${{hashFiles('**/Chart.lock') }}
+
+    - name: Setup dependencies
+      if: steps.cache-packages.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        HELM_INSTALL_DIR: ${{ github.workspace }}/.github/.bin
+        HELM_PLUGINS: ${{ github.workspace }}/.github/.bin/plugins
+        K3D_INSTALL_DIR: ${{ github.workspace }}/.github/.bin
+        KUBECTL_VERSION: "1.26.0"
+        K3D_VERSION: "5.4.6"
+      run: |
+        export PATH="${{ github.workspace }}/.github/.bin:$PATH"
+        echo "PATH=${{ github.workspace }}/.github/.bin:$PATH" >> $GITHUB_ENV
+        
+        echo "Downloading 'helm' 3...."
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+        
+        echo "Installing kubeval helm plugin"
+        mkdir .github/.bin/plugins
+        helm plugin install https://github.com/instrumenta/helm-kubeval
+        
+        echo "Installing k3d"
+        curl -s https://raw.githubusercontent.com/k3d-io/k3d/v${K3D_VERSION}/install.sh | USE_SUDO="false" bash
+        
+        echo "Installing kubectl"
+        pushd .github/.bin
+        curl -LO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl
+        chmod +x ./kubectl
+        popd
+        
+        echo "Installing chart dependencies"
+        pushd openfga
+        helm repo add bitnami https://charts.bitnami.com/bitnami
+        helm repo update
+        helm dependency build
+        popd

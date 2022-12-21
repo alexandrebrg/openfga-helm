@@ -6,10 +6,24 @@ on:
       - main
 
 jobs:
+  dependencies:
+    name: Prepare Dependencies
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: "1.19"
+      - name: Setup dependencies
+        uses: ./.github/actions/setup
+
   release:
     permissions:
       contents: write
     runs-on: ubuntu-latest
+    needs:
+        - dependencies
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -21,14 +35,9 @@ jobs:
           git config user.name "AlexandreBrg Bot"
           git config user.email "alexandrebrg@users.noreply.github.com"
 
-      - name: Install Helm
-        uses: azure/setup-helm@v3
-        with:
-          version: v3.10.0
-
       - name: Update repositories
         run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add bitnami https://charts.bitnami.com/bitnami || true
           helm repo update
 
       - name: Run chart-releaser
