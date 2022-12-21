@@ -5,10 +5,10 @@ runs:
   steps:
     - name: Extract branch name
       shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_STATE
       id: extract_branch
 
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       id: cache-packages
       with:
         path: |
@@ -17,12 +17,12 @@ runs:
           ~/.config/helm
           ~/.local/share/helm
           ~/.cache/helm
-          ~/openfga/charts
-          ${{ github.workspace }}/.bin
+          ${{ github.workspace }}/openfga/charts
+          ${{ github.workspace }}/.github/.bin
         key:
-          ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-
+          ${{ runner.os }}_${{ env.BRANCH_NAME }}
         restore-keys: |
-          ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-
+          ${{ runner.os }}_${{ env.BRANCH_NAME }}
 
     - name: Setup dependencies
       if: steps.cache-packages.outputs.cache-hit != 'true'
