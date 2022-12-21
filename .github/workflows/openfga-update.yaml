@@ -41,11 +41,12 @@ jobs:
           
           export CURRENT_VERSION=$(yq eval '.appVersion' openfga/Chart.yaml)
           echo "CURRENT_OPENFGA_VERSION=${CURRENT_VERSION}" >> $GITHUB_ENV
-      
-      - uses: JasonEtco/create-an-issue@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          filename: .github/NEW_RELEASE_TEMPLATE.md
-          update_existing: true
-          search_existing: open
+      - name: Create issue if new version is available
+        run: |
+          envsubst < .github/NEW_RELEASE_TEMPLATE.md > NEW_RELEASE.md
+          gh issue create \
+            --title "Update OpenFGA to ${{ env.LATEST_OPENFGA_VERSION }}" \
+            --body-file ./NEW_RELEASE.md \
+            --assignee AlexandreBrg \
+            --label "help wanted, enhancement"
+#        if: ${{ env.LATEST_OPENFGA_VERSION != env.CURRENT_OPENFGA_VERSION }}

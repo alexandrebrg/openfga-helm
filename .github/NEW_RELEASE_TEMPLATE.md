@@ -5,5 +5,5 @@ labels: help wanted, enhancement
 ---
 A new version of OpenFGA is available. Please consider upgrading it to the latest version.
 
-**Current version:** {{ env.CURRENT_OPENFGA_VERSION }}
-**Latest version:** {{ env.LATEST_OPENFGA_VERSION }}
+**Current version:** ${CURRENT_OPENFGA_VERSION
+**Latest version:** $LATEST_OPENFGA_VERSION
