@@ -34,8 +34,8 @@ runs:
         KUBECTL_VERSION: "1.26.0"
         K3D_VERSION: "5.4.6"
       run: |
-        export PATH=".github/.bin:$PATH"
-        echo "PATH=.github/.bin:$PATH" >> $GITHUB_ENV
+        export PATH="${{ github.workspace }}/.github/.bin:$PATH"
+        echo "PATH=${{ github.workspace }}/.github/.bin:$PATH" >> $GITHUB_ENV
         
         echo "Downloading 'helm' 3...."
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
