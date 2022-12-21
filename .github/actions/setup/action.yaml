@@ -40,14 +40,14 @@ runs:
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
         
         echo "Installing kubeval helm plugin"
-        mkdir .bin/plugins
+        mkdir .github/.bin/plugins
         helm plugin install https://github.com/instrumenta/helm-kubeval
         
         echo "Installing k3d"
         curl -s https://raw.githubusercontent.com/k3d-io/k3d/v${K3D_VERSION}/install.sh | USE_SUDO="false" bash
         
         echo "Installing kubectl"
-        pushd .bin
+        pushd .github/.bin
         curl -LO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl
         chmod +x ./kubectl
         popd
