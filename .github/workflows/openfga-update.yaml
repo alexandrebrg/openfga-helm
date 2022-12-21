@@ -22,21 +22,15 @@ jobs:
       - dependencies
     steps:
       - uses: actions/checkout@v1
-      - name: "Get OpenFGA latest release"
-        id: last_release
-        uses: InsonusK/get-latest-release@v1.0.1
+      - id: openfga
+        name: "Get OpenFGA latest version"
+        uses: pozetroninc/github-action-get-latest-release@master
         with:
-          myToken: ${{ github.token }}
-          exclude_types: "draft|prerelease"
-          view_top: 1
+          repository: openfga/openfga
+          excludes: prerelease, draft
       - name: "Print result"
         run: |
-          echo "id: ${{ steps.last_release.outputs.id }}"
-          echo "name: ${{ steps.last_release.outputs.name }}"
-          echo "tag_name: ${{ steps.last_release.outputs.tag_name }}"
-          echo "created_at: ${{ steps.last_release.outputs.created_atd }}"
-          echo "draft: ${{ steps.last_release.outputs.draft }}"
-          echo "prerelease: ${{ steps.last_release.outputs.prerelease }}"
+          echo "tag_name: ${{ steps.openfga.outputs.release }}"
       - name: "Fetch current OpenFGA version"
         run: |
           echo "CURRENT_OPENFGA_VERSION=$(yq eval '.appVersion' openfga/Chart.yaml)" >> $GITHUB_ENV
