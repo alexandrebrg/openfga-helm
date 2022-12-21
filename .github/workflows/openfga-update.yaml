@@ -42,6 +42,8 @@ jobs:
           export CURRENT_VERSION=$(yq eval '.appVersion' openfga/Chart.yaml)
           echo "CURRENT_OPENFGA_VERSION=${CURRENT_VERSION}" >> $GITHUB_ENV
       - name: Create issue if new version is available
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           envsubst < .github/NEW_RELEASE_TEMPLATE.md > NEW_RELEASE.md
           gh issue create \
