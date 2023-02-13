@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.4
+
+* Upgrade OpenFGA version to v0.3.4
+
 ## 0.3.3
 
 * Upgrade OpenFGA version to v0.3.2
