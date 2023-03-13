@@ -2,6 +2,32 @@ apiVersion: v1
 entries:
   openfga:
   - apiVersion: v2
+    appVersion: v0.3.7
+    created: "2023-03-13T23:47:23.951516638Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.x.x
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: OpenFGA is a high performance and flexible authorization/permission
+      engine built for developers and inspired by Google Zanzibar
+    digest: 1d9f1dfddd16d4622660adb9af7f0f25481af057f2e74e0830f14fa86642b5c2
+    home: https://github.com/AlexandreBrg/openfga-helm
+    keywords:
+    - authorization
+    maintainers:
+    - name: AlexandreBrg
+      url: https://github.com/AlexandreBrg/openfga-helm
+    name: openfga
+    urls:
+    - https://github.com/AlexandreBrg/openfga-helm/releases/download/openfga-0.3.5/openfga-0.3.5.tgz
+    version: 0.3.5
+  - apiVersion: v2
     appVersion: v0.3.4
     created: "2023-02-13T23:31:38.989769956Z"
     dependencies:
@@ -198,4 +224,4 @@ entries:
     urls:
     - https://github.com/AlexandreBrg/openfga-helm/releases/download/openfga-0.1.0/openfga-0.1.0.tgz
     version: 0.1.0
-generated: "2023-02-13T23:31:38.989809656Z"
+generated: "2023-03-13T23:47:23.951556038Z"
