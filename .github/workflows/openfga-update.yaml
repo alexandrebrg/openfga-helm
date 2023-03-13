@@ -22,7 +22,7 @@ jobs:
     needs:
       - dependencies
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - id: openfga
         name: "Get OpenFGA latest version"
         uses: pozetroninc/github-action-get-latest-release@master
