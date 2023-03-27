@@ -1,8 +1,10 @@
+## Maintenance mode
+
+This chart was created to fill the need of Helm Chart for OpenFGA, as they released an [official version](https://github.com/openfga/helm-charts) of their chart, this repository is no more needed.
+
 # OpenFGA Helm chart 
 
 ![Helm chart version](https://img.shields.io/github/v/release/AlexandreBrg/openfga-helm?sort=semver&color=green)
-
-**Be aware that this chart isn't the official OpenFGA chart!**
 
 OpenFGA is an high-performance and flexible authorization/permission engine built for developers and inspired by [Google Zanzibar](https://research.google/pubs/pub48190/). 
 You can learn more about it on their [official repository](https://github.com/openfga/openfga/).
