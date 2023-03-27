@@ -28,7 +28,7 @@
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------- | ----------------- |
 | `image.registry`                   | OpenFGA image registry                                                                                  | `docker.io`       |
 | `image.repository`                 | OpenFGA image repository                                                                                | `openfga/openfga` |
-| `image.tag`                        | OpenFGA image tag (immutable tags are recommended)                                                      | `v0.3.7`          |
+| `image.tag`                        | OpenFGA image tag (immutable tags are recommended)                                                      | `v0.4.2`          |
 | `image.digest`                     | OpenFGA image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag | `""`              |
 | `image.pullPolicy`                 | OpenFGA image pull policy                                                                               | `IfNotPresent`    |
 | `image.pullSecrets`                | Specify docker-registry secret names as an array                                                        | `[]`              |
@@ -76,7 +76,7 @@
 | `externalDatabase.existingSecretKey` | Name of an existing secret key containing the database uri                                              | `""`              |
 | `migrateJob.image.registry`          | OpenFGA image registry                                                                                  | `docker.io`       |
 | `migrateJob.image.repository`        | OpenFGA image repository                                                                                | `openfga/openfga` |
-| `migrateJob.image.tag`               | OpenFGA image tag (immutable tags are recommended)                                                      | `v0.3.7`          |
+| `migrateJob.image.tag`               | OpenFGA image tag (immutable tags are recommended)                                                      | `v0.4.2`          |
 | `migrateJob.image.digest`            | OpenFGA image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag | `""`              |
 | `migrateJob.image.pullPolicy`        | OpenFGA image pull policy                                                                               | `IfNotPresent`    |
 | `migrateJob.annotations`             | Annotations for migration job                                                                           | `{}`              |
